@@ -1,0 +1,24 @@
+{
+  "name": "name",
+  "version": "0.0.1",
+  "homepage": "",
+  "authors": [
+    "Anatoly Kolesov <kolesoffac@gmail.com>"
+  ],
+  "description": "",
+  "main": "build/name.js",
+  "moduleType": [],
+  "license": "MIT",
+  "dependencies": {
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "rollup.config.js",
+    "package.json"
+  ]
+}
