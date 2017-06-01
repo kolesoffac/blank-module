@@ -14,9 +14,9 @@ import css from 'rollup-plugin-css-only'
 
 export default {
 	entry: 'src/main.js',
-	dest: 'build/' + (process.env.BUILD_MODE === 'production'?'x-charts.min.js':'x-charts.js'),
+	dest: 'build/' + (process.env.BUILD_MODE === 'production'?'moduleName.min.js':'moduleName.js'),
 	format: 'umd',
-	moduleName: 'xCharts',
+	moduleName: 'moduleName',
 	plugins: [
 
 		cleanup(),
@@ -31,6 +31,9 @@ export default {
 			browser: true
 		}),
 		commonjs(),
+		babel({
+			exclude: 'node_modules/**',
+		}),
 		(process.env.BUILD_MODE === 'eslint' && eslint({
 			exclude: [
 				'src/styles/**',

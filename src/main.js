@@ -5,10 +5,11 @@ import events from "./events/events";
 import config from "./other/config";
 import { version } from "../package.json";
 
-var moduleName = {};
+var moduleName = {},
+	self;
 
 function ModuleName(options) {
-	var self = this;
+	self = this;
 	
 	//private object
 	self.options = options || {};
@@ -35,7 +36,7 @@ moduleName.create = function (options) {
 	moduleObj = new ModuleName(options);
 
 	//public object
-	return moduleObj.then(function(self) {
+	return moduleObj.then(function() {
 		//public methods
 		obj.getConfig = getConfig.bind(self);
 

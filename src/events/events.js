@@ -3,6 +3,10 @@ function Events(_this) {
 };
 
 function recursiveRun(fn, res, type) {
+	var
+		self = this.self,
+		context = this;
+	
 	while (_.isFunction(fn)) {
 		fn = fn(res);
 	};
@@ -10,7 +14,7 @@ function recursiveRun(fn, res, type) {
 	return Promise.resolve().then(function() {
 		return fn;
 	}).catch(function(err) {
-		utils.printError(err, 'Ошибка события(recursiveRun): "' + type + '"; ');
+		utils.printError(err, 'Ошибка события(recursiveRun): "' + type + '"; ', null, true);
 	});
 };
 
@@ -26,19 +30,21 @@ Events.prototype.runEvent = function(opt) {
 	return Promise.resolve().then(function() {
 		var promises = [];
 		
-		promises.push(recursiveRun(self.config.events[onBeforeRun], null, onBeforeRun));
-		promises.push(recursiveRun(onBeforePrivateRun, null, "onBeforePrivateRun"));
+		promises.push(recursiveRun.call(context, self.config.events[onBeforeRun], null, onBeforeRun));
+		promises.push(recursiveRun.call(context, onBeforePrivateRun, null, "onBeforePrivateRun"));
 
 		return Promise.all(promises);
 	}).then(function(res) {
 		var promises = [];
 		
-		promises.push(recursiveRun(onAfterPrivateRun, res[1], "onAfterPrivateRun"));
-		promises.push(recursiveRun(self.config.events[onAfterRun], res[1], onAfterRun));
+		promises.push(recursiveRun.call(context, onAfterPrivateRun, res[1], "onAfterPrivateRun"));
+		promises.push(recursiveRun.call(context, self.config.events[onAfterRun], res[0], onAfterRun));
 
-		return Promise.all(promises)
+		return Promise.all(promises).then(function(args) {
+			return args[0]; //return private result
+		});
 	}).catch(function(err) {
-		utils.printError(err, 'Ошибка события(основной): ' + JSON.stringify(opt));
+		utils.printError(err, 'Ошибка события(основной): ' + JSON.stringify(opt), null, opt.isDontCatch);
 	});
 };
 //=======================================
